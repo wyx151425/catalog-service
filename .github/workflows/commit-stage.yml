@@ -1,4 +1,6 @@
+# 工作流的名称
 name: Commit Stage
+# 每当有新的代码被推送到仓库时，该工作流就会被触发
 on: push
 
 env:
@@ -8,16 +10,24 @@ env:
 
 jobs:
   build:
+    # 该 job 的唯一标识符，适宜人类阅读的名称
     name: Build and Test
+    # 该 job 应该在哪种机器上运行
     runs-on: ubuntu-22.04
+    # 授予该 job 的权限
     permissions:
+      # 检出当前 Git 仓库的权限
       contents: read
+      # 提交安全事件到 GitHub 的权限
       security-events: write
     steps:
+      # 检出当前的 Git 仓库 (catalog-service)
       - name: Checkout source code
         uses: actions/checkout@v4
+      # 安装和配置 Java 运行时
       - name: Set up JDK
         uses: actions/setup-java@v4
+        # 定义使用哪个版本、发行版和缓存类型
         with:
           distribution: temurin
           java-version: 17
@@ -26,18 +36,34 @@ jobs:
         run: |
           chmod +x gradlew
           ./gradlew build
+      # 使用 grype 扫描代码库的漏洞
       - name: Code vulnerability scanning
         uses: anchore/scan-action@v3
+        # 为当前的步骤分配一个标识符，以便于后续步骤引用它
         id: scan
         with:
+          # 检出仓库的路径
           path: "${{ github.workspace }}"
+          # 遇到安全漏洞时，是否将当前构建设置为失败
           fail-build: false
+          # 视为错误的最低安全种类 (low、medium、high 或 critical)
           severity-cutoff: high
+          # 在扫描完成后是否启用报告生成功能
+          acs-report-enable: true
+      # 上传安全漏洞报告到 GitHub 中 (SARIF 格式)
       - name: Upload vulnerability report
         uses: github/codeql-action/upload-sarif@v3
+        # 即便上一个步骤失败，也要上传报告
         if: success() || failure()
         with:
+          # 从上一个步骤的输出中获取报告
           sarif_file: ${{ steps.scan.outputs.sarif }}
+      - name: Build, unit tests and integration tests
+        # 确保 Gradle 包装器是可执行的，解决 Windows 不兼容的问题
+        # 运行 Gradle 构建 task，它会编译代码库并运行单元测试和集成测试
+        run: |
+          chmod +x gradlew
+          ./gradlew build
       - name: Validate Kubernetes manifests
         uses: stefanprodan/kube-tools@v1
         with:

@@ -1,11 +1,16 @@
 server:
+  # Web 服务器端口
   port: 9001
   shutdown: graceful
   tomcat:
+    # Tomcat 从接收到一个来自客户端的 TCP 连接到实际接收到 HTTP 请求所能等待的时间限制
     connection-timeout: 2s
+    # 等待新的 HTTP 请求时连接保持打开状态的时长
     keep-alive-timeout: 15s
     threads:
+      # 请求处理线程的最大数量
       max: 50
+      # 保持始终运行的最小线程数量
       min-spare: 5
 
 spring:

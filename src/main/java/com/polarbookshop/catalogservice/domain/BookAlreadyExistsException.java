@@ -2,7 +2,7 @@ package com.polarbookshop.catalogservice.domain;
 
 /**
  * @Author: WangZhenqi
- * @Description:
+ * @Description: 添加已存在的图书时所抛出的异常
  * @Date: Created in 2025-10-22 19:42
  * @Modified By:
  */

@@ -6,10 +6,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @Author: WangZhenqi
- * @Description:
+ * @Description: 定义了一个 GET 端点来返回欢迎消息的控制器
  * @Date: Created in 2025-09-03 11:13
  * @Modified By:
  */
+// 标记该类将会定义 REST/HTTP 端点的处理器
 @RestController
 public class HomeController {
 
@@ -19,9 +20,9 @@ public class HomeController {
         this.polarProperties = polarProperties;
     }
 
+    // 处理对根端点的 GET 请求
     @GetMapping("/")
     public String getGreeting() {
         return polarProperties.getGreeting();
     }
-
 }
