@@ -12,6 +12,7 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
  */
 // 定义 Spring 配置类并触发组件扫描和 Spring Boot的自动配置
 @SpringBootApplication
+// 加载 Spring 上下文中的配置数据 bean
 @ConfigurationPropertiesScan
 public class CatalogServiceApplication {
 

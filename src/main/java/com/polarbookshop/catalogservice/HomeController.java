@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HomeController {
 
+    // 通过构造器自动装配注入的 bean 来访问自定义属性
     private final PolarProperties polarProperties;
 
     public HomeController(PolarProperties polarProperties) {
@@ -23,6 +24,7 @@ public class HomeController {
     // 处理对根端点的 GET 请求
     @GetMapping("/")
     public String getGreeting() {
+        // 使用来自配置数据 bean 的欢迎消息
         return polarProperties.getGreeting();
     }
 }

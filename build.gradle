@@ -24,6 +24,13 @@ ext {
     set('testcontainersVersion', "1.17.3")
 }
 
+// 配置 Gradle 以在构建项目的时候使用注解处理器
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
 // 应用使用的依赖
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
@@ -49,6 +56,11 @@ dependencyManagement {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
         mavenBom "org.testcontainers:testcontainers-bom:${testcontainersVersion}"
     }
+}
+
+// 为开发环境定义激活的 profile
+bootRun {
+    systemProperty 'spring.profiles.active', 'testdata'
 }
 
 bootBuildImage {

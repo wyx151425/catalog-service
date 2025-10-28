@@ -45,5 +45,6 @@ management:
       exposure:
         include: refresh
 
+# 为自定义属性定义值
 polar:
   greeting: Welcome to the local book catalog!
