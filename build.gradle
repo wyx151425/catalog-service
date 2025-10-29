@@ -21,6 +21,7 @@ repositories {
 
 ext {
     set('springCloudVersion', "2021.0.3")
+    // 定义要使用的 Testcontainers 版本
     set('testcontainersVersion', "1.17.3")
 }
 
@@ -42,6 +43,7 @@ dependencies {
     implementation 'org.springframework.retry:spring-retry'
     implementation 'org.flywaydb:flyway-core'
 
+    // 为 PostgreSQL 数据库提供容器管理特性
     runtimeOnly 'org.postgresql:postgresql'
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
@@ -54,6 +56,7 @@ dependencies {
 dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        // Testcontainers 依赖管理的 BOM (物料清单)
         mavenBom "org.testcontainers:testcontainers-bom:${testcontainersVersion}"
     }
 }

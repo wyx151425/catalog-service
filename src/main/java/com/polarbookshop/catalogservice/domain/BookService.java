@@ -47,14 +47,18 @@ public class BookService {
                     // 当编辑图书的时候，除了 ISBN 之外，Book 的其他字段均可更新，
                     // 因为 ISBN 是实体标识符，所以不能修改（添加此注解时还没有id、createdDate、lastModifiedDate、version）
                     var bookToUpdate = new Book(
+                            // 使用现有图书的标识符
                             existingBook.id(),
                             existingBook.isbn(),
                             book.title(),
                             book.author(),
                             book.price(),
                             book.publisher(),
+                            // 使用现有图书 record 的创建时间
                             existingBook.createdDate(),
+                            // 使用现有图书 record 的最后更新时间。如果操作成功的话，Spring Data 会自动更新它
                             existingBook.lastModifiedDate(),
+                            // 使用现有图书的版本。如果更新操作成功的话，这个值将会自动增加
                             existingBook.version()
                     );
                     return bookRepository.save(bookToUpdate);

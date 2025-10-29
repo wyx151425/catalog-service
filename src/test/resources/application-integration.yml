@@ -1,3 +1,4 @@
 spring:
   datasource:
-    url: jdbc:tc:postgresql:14.4:///  # 标识Testcontainers中的PostgreSQL模块，其中“14.4”是要使用的PostgreSQL版本
+    # 标识 Testcontainers 中的 PostgreSQL 模块，其中 “14.4” 是要使用的 PostgreSQL 版本
+    url: jdbc:tc:postgresql:14.4:///

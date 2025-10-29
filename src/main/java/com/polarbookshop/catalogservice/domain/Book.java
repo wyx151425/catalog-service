@@ -20,6 +20,7 @@ import java.time.Instant;
 // 领域模型使用 record 的形式实现的，它是不可变的对象
 public record Book(
 
+        // 将该字段标记为实体的主键
         @Id
         Long id,
 
@@ -44,19 +45,24 @@ public record Book(
         @Positive(message = "The book price must be greater than zero.")
         Double price,
 
+        // 新的可选字段
         String publisher,
 
+        // 实体的创建时间
         @CreatedDate
         Instant createdDate,
 
+        // 实体最后修改的时间
         @LastModifiedDate
         Instant lastModifiedDate,
 
+        // 实体的版本号，用于实现乐观锁
         @Version
         int version
 
 ) {
     public static Book of(String isbn, String title, String author, Double price, String publisher) {
+        // 当 id 为 null 并且 version 为 0 的时候，该实体将被视为新增的
         return new Book(null, isbn, title, author, price, publisher, null, null, 0);
     }
 }

@@ -29,9 +29,12 @@ public class BookDataLoader {
     // 当应用发送 ApplicationReadyEvent 事件时会触发测试数据的生成，也就是当应用启动阶段完成时
 	@EventListener(ApplicationReadyEvent.class)
 	public void loadBookTestData() {
+        // 如果存在的话，删除所有既存的图书，从一个空的数据库开始
         bookRepository.deleteAll();
+        // 框架在幕后负责为标识符和版本字段赋值
 		var book1 = Book.of("1234567891", "Northern Lights", "Lyra Silverstar", 9.90, "Polarsophia");
 		var book2 = Book.of("1234567892", "Polar Journey", "Iorek Polarson", 12.90, "Polarsophia");
-		bookRepository.saveAll(List.of(book1, book2));
+		// 一次性保存多个对象
+        bookRepository.saveAll(List.of(book1, book2));
 	}
 }

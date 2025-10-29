@@ -17,6 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 // 提供测试 Spring Boot 应用的设置，加载完整的 Spring Web 应用上下文以及监听任意端口的 Servlet 容器
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+// 启用 “integration” profile 以加载 application-integration.yml 中的配置
 @ActiveProfiles("integration")
 class CatalogServiceApplicationTests {
 

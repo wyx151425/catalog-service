@@ -16,15 +16,26 @@ import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * @Author: WangZhenqi
+ * @Description: 针对数据切片的集成测试
+ * @Date: Created in 2025-10-22 19:45
+ * @Modified By:
+ */
+// 标识这是一个关注 Spring Data JDBC 组件的测试类
 @DataJdbcTest
+// 导入数据配置，需要启用审计功能
 @Import(DataConfig.class)
+// 禁用依赖嵌入式测试数据库的默认行为，因为我们使用的是 Testcontainers
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+// 启用 “integration” profile，以便于从 application-integration.yml 中加载配置
 @ActiveProfiles("integration")
 class BookRepositoryJdbcTests {
 
     @Autowired
     private BookRepository bookRepository;
 
+    // 用于数据库交互的低层级对象
     @Autowired
     private JdbcAggregateTemplate jdbcAggregateTemplate;
 
@@ -46,6 +57,7 @@ class BookRepositoryJdbcTests {
     void findBookByIsbnWhenExisting() {
         var bookIsbn = "1234561237";
         var book = Book.of(bookIsbn, "Title", "Author", 12.90, "Polarsophia");
+        // 使用 JdbcAggregateTemplate 以准备要测试的数据
         jdbcAggregateTemplate.insert(book);
 
         Optional<Book> actualBook = bookRepository.findByIsbn(bookIsbn);
