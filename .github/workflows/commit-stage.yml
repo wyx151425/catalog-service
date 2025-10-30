@@ -4,8 +4,11 @@ name: Commit Stage
 on: push
 
 env:
+  # 使用 GitHub Container Registry
   REGISTRY: ghcr.io
+  # 镜像名称，GitHub 用户名按小写形式
   IMAGE_NAME: wyx151425/catalog-service
+  # 目前所有新的镜像都会使用 latest 标签
   VERSION: latest
 
 jobs:
@@ -72,17 +75,26 @@ jobs:
           command: |
             kubeval --strict -d k8s
   package:
+    # 该 job 的唯一标识符
     name: Package and Publish
+    # 只在 main 分支上运行该 job
     if: ${{ github.ref == 'refs/heads/main' }}
+    # 只有当 “build” job 成功完成时，才会运行该 job
     needs: [ build ]
+    # 在 Ubuntu 22.04 机器上运行该 job
     runs-on: ubuntu-22.04
     permissions:
+      # 检出当前 Git 仓库的权限
       contents: read
+      # 上传镜像到 GitHub Container Registry 的权限
       packages: write
+      # 提交安全事件到 GitHub 的权限
       security-events: write
     steps:
+      # 检出当前 Git 仓库 (catalog-service)
       - name: Checkout source code
         uses: actions/checkout@v4
+      # 安装和配置 Java 运行时
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
@@ -90,27 +102,37 @@ jobs:
           java-version: 17
           cache: gradle
       - name: Build container image
+        # 依赖 Spring Boot 中的 Buildpacks 集成来构建容器镜像并定义发布候选的名称
         run: |
           chmod +x gradlew
           ./gradlew bootBuildImage \
             --imageName ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
       - name: OCI image vulnerability scanning
+        # 使用 grype 扫描发布候选镜像的漏洞
         uses: anchore/scan-action@v3
         id: scan
+        # 要扫描的镜像是发布候选
         with:
           image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+          # 如果镜像中发现漏洞，构建不会失败
           fail-build: false
           severity-cutoff: high
       - name: Upload vulnerability report
+        # 将安全漏洞报告上传至 GitHub (SARIF格式)
         uses: github/codeql-action/upload-sarif@v3
         if: success() || failure()
         with:
           sarif_file: ${{ steps.scan.outputs.sarif }}
       - name: Log into container registry
+        # 对 GitHub 容器注册中心进行认证
         uses: docker/login-action@v3
         with:
+          # 注册中心的值定义在前面的环境变量中
           registry: ${{ env.REGISTRY }}
+          # 当前用户的 GitHub 用户名，该值会有 GitHub Actions 提供
           username: ${{ github.actor }}
+          # 认证注册中心所需的令牌，该值会由 GitHub Actions 提供
           password: ${{ secrets.GITHUB_TOKEN }}
+      # 推送发布候选到注册中心
       - name: Publish container image
         run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
