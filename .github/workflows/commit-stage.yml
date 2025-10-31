@@ -68,10 +68,14 @@ jobs:
           chmod +x gradlew
           ./gradlew build
       - name: Validate Kubernetes manifests
+        # 该 action 能够安装与 Kubernetes 协作的工具
         uses: stefanprodan/kube-tools@v1
         with:
+          # 安装中包含 Kubernetes CLI
           kubectl: 1.24.3
+          # 安装中包含 Kubeval
           kubeval: 0.16.1
+          # 使用 Kubeval 校验 k8s 目录中的 Kubernetes 清单
           command: |
             kubeval --strict -d k8s
   package:

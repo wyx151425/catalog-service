@@ -1,35 +1,54 @@
+# Deployment 对象的 API 版本
 apiVersion: apps/v1
+# 要创建的对象类型
 kind: Deployment
 metadata:
+  # Deployment 的名称
   name: catalog-service
+  # Deployment 附加的一组标签
   labels:
+    # Deployment 对象添加了 “app=catalog-service” 标签
     app: catalog-service
 spec:
+  # 应该部署的 Pod 副本数量
   replicas: 1
+  # 定义用来选择 Pod 的标签，以便于进行扩展
   selector:
     matchLabels:
       app: catalog-service
+  # 创建 Pod 的模板
   template:
     metadata:
+      # Pod 对象所附加的标签。它们应该与 selector 所使用的值相匹配
       labels:
         app: catalog-service
     spec:
+      # Pod 中容器的列表，在本例中只有一个容器
       containers:
+        # Pod 的名称
         - name: catalog-service
+          # 运行容器所使用的镜像。这里没有定义标签，因此会隐式使用 “latest”
           image: catalog-service:0.0.1-SNAPSHOT
+          # 只有本地镜像不存在时，Kubernetes 才会从容器注册中心拉取镜像
           imagePullPolicy: IfNotPresent
           lifecycle:
+            # 让 Kubernetes 在发送 SIGTERM 信号到 Pod 之前等待 5 秒钟
             preStop:
               exec:
                 command: [ "sh", "-c", "sleep 5"]
           ports:
+            # 容器对外暴露的端口
             - containerPort: 9001
+          # Paketo Buildpacks 环境变量，配置用于内存计算的线程数量
           env:
+            # 传递给 Pod 的环境变量列表
             - name: BPL_JVM_THREAD_COUNT
               value: "50"
             - name: SPRING_CLOUD_CONFIG_URI
               value: http://config-service
+            # spring.datasource.url 属性的值，指向我们前文部署的 PostgreSQL Pod
             - name: SPRING_DATASOURCE_URL
               value: jdbc:postgresql://polar-postgres/polardb_catalog
+            # 启用名为 testdata 的 Spring profile
             - name: SPRING_PROFILES_ACTIVE
               value: testdata

@@ -1,14 +1,23 @@
+# Service 对象的 API 版本
 apiVersion: v1
+# 要创建的对象类型
 kind: Service
 metadata:
+  # Service 的名称，它必须是一个合法的 DNS 名称
   name: catalog-service
+  # 该 Service 附加的标签
   labels:
     app: catalog-service
 spec:
+  # Service 的类型
   type: ClusterIP
   selector:
+    # 用来匹配目标 Pod 的标签，该 Service 会暴露这些 Pod
     app: catalog-service
   ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 9001
+    # 该 Service 使用的网络协议
+    - protocol: TCP
+      # Service 暴露的端口
+      port: 80
+      # Service 的目标 Pod 所暴露的端口
+      targetPort: 9001
