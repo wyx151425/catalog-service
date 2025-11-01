@@ -28,7 +28,7 @@ spec:
         # Pod 的名称
         - name: catalog-service
           # 运行容器所使用的镜像。这里没有定义标签，因此会隐式使用 “latest”
-          image: catalog-service:0.0.1-SNAPSHOT
+          image: catalog-service
           # 只有本地镜像不存在时，Kubernetes 才会从容器注册中心拉取镜像
           imagePullPolicy: IfNotPresent
           lifecycle:

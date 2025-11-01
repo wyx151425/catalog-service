@@ -42,7 +42,7 @@ spring:
       request-connect-timeout: 5000
       # 等待从配置服务器读取配置数据的超时时间 (毫秒)
       request-read-timeout: 5000
-      # 将连接至配置服务器的失败设置为致命错误
+      # 将连接至配置服务器的失败设置为致命错误，在生产环境中设置为 true
       fail-fast: true
       retry:
         # 最大的尝试次数
