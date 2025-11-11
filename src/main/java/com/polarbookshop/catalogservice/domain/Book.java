@@ -1,9 +1,6 @@
 package com.polarbookshop.catalogservice.domain;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.annotation.Version;
+import org.springframework.data.annotation.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -56,13 +53,21 @@ public record Book(
         @LastModifiedDate
         Instant lastModifiedDate,
 
+
+        // 创建实体的用户
+        @CreatedBy
+        String createdBy,
+
+        // 最后修改实体的用户
+        @LastModifiedBy
+        String lastModifiedBy,
+
         // 实体的版本号，用于实现乐观锁
         @Version
         int version
-
 ) {
     public static Book of(String isbn, String title, String author, Double price, String publisher) {
         // 当 id 为 null 并且 version 为 0 的时候，该实体将被视为新增的
-        return new Book(null, isbn, title, author, price, publisher, null, null, 0);
+        return new Book(null, isbn, title, author, price, publisher, null, null, null, null, 0);
     }
 }
