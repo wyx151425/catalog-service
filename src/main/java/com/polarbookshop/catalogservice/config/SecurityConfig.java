@@ -1,4 +1,4 @@
-package com.polarbookshop.catalogservice.config.config;
+package com.polarbookshop.catalogservice.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;

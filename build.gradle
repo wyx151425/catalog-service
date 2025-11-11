@@ -23,6 +23,8 @@ ext {
     set('springCloudVersion', "2021.0.3")
     // 定义要使用的 Testcontainers 版本
     set('testcontainersVersion', "1.17.3")
+    // Testcontainers Keycloak 的版本
+    set('testKeycloakVersion', '2.3.0')
 }
 
 // 配置 Gradle 以在构建项目的时候使用注解处理器
@@ -53,6 +55,11 @@ dependencies {
     // 为 Spring Reactive Web 添加测试依赖
     testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
     testImplementation 'org.testcontainers:postgresql'
+
+    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'org.testcontainers:junit-jupiter'
+    // 基于 Testcontainers，提供 Keycloak 测试工具
+    testImplementation 'org.github.dasniko:testcontainers-keycloak:${testKeycloakVersion}'
 }
 
 dependencyManagement {
