@@ -59,7 +59,7 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'org.testcontainers:junit-jupiter'
     // 基于 Testcontainers，提供 Keycloak 测试工具
-    testImplementation 'org.github.dasniko:testcontainers-keycloak:${testKeycloakVersion}'
+    testImplementation "com.github.dasniko:testcontainers-keycloak:${testKeycloakVersion}"
 }
 
 dependencyManagement {
