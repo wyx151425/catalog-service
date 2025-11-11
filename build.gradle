@@ -43,6 +43,8 @@ dependencies {
     implementation 'org.springframework.retry:spring-retry'
     implementation 'org.flywaydb:flyway-core'
 
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+
     // 为 PostgreSQL 数据库提供容器管理特性
     runtimeOnly 'org.postgresql:postgresql'
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
