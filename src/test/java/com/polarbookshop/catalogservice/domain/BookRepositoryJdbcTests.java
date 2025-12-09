@@ -119,7 +119,7 @@ class BookRepositoryJdbcTests {
         var bookToCreate = Book.of("1232343457", "Title", "Author", 12.90, "Polarsophia");
         var createdBook = bookRepository.save(bookToCreate);
 
-        // 当用户已认证是，存在审计数据
+        // 当用户已认证时，存在审计数据
         assertThat(createdBook.createdBy()).isEqualTo("john");
         assertThat(createdBook.lastModifiedBy()).isEqualTo("john");
     }
