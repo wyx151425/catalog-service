@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.jdbc.core.JdbcAggregateTemplate;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -100,4 +101,26 @@ class BookRepositoryJdbcTests {
         assertThat(jdbcAggregateTemplate.findById(persistedBook.id(), Book.class)).isNull();
     }
 
+    // 该测试用例会在未认证的上下文中执行
+    @Test
+    void whenCreateBookNotAuthenticatedThenNoAuditMetadata() {
+        var bookToCreate = Book.of("1232343456", "Title", "Author", 12.90, "Polarsophia");
+        var createdBook = bookRepository.save(bookToCreate);
+
+        // 当用户未认证时，没有审计数据
+        assertThat(createdBook.createdBy()).isNull();
+        assertThat(createdBook.lastModifiedBy()).isNull();
+    }
+
+    // 该测试用例会在已认证的上下文中执行，并且用户为 “john”
+    @Test
+    @WithMockUser("john")
+    void whenCreateBookAuthenticatedThenAuditMetadata() {
+        var bookToCreate = Book.of("1232343457", "Title", "Author", 12.90, "Polarsophia");
+        var createdBook = bookRepository.save(bookToCreate);
+
+        // 当用户已认证是，存在审计数据
+        assertThat(createdBook.createdBy()).isEqualTo("john");
+        assertThat(createdBook.lastModifiedBy()).isEqualTo("john");
+    }
 }
