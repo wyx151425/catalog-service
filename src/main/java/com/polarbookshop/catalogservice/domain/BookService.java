@@ -58,6 +58,10 @@ public class BookService {
                             existingBook.createdDate(),
                             // 使用现有图书 record 的最后更新时间。如果操作成功的话，Spring Data 会自动更新它
                             existingBook.lastModifiedDate(),
+                            // 创建实体的用户
+                            existingBook.createdBy(),
+                            // 最后更新实体的用户
+                            existingBook.lastModifiedBy(),
                             // 使用现有图书的版本。如果更新操作成功的话，这个值将会自动增加
                             existingBook.version()
                     );
